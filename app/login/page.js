@@ -31,7 +31,7 @@ export default function LoginPage() {
         return;
       }
       if (loginError.code === "auth/unauthorized-domain") {
-        setError("이 주소는 아직 허용되지 않았습니다. Firebase 승인된 도메인에 localhost를 추가해 주세요.");
+        setError("이 주소에서는 구글 로그인을 사용할 수 없습니다.");
         return;
       }
       setError("구글 로그인에 실패했습니다. 다시 시도해 주세요.");

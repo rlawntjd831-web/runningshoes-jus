@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signOut } from "firebase/auth";
 import { loadProfile, saveWeatherLog } from "@/lib/profile";
+import { auth } from "@/lib/firebase";
 import { pickClosetShoe } from "@/lib/today";
 import { dateKey, formatShoeMileage, getDayRecord, getShoeMileageMap, TRAINING_MONTH } from "@/lib/training";
 import { getMotivation } from "@/lib/motivation";
@@ -147,6 +149,15 @@ export default function HomeDashboard() {
             </li>
           ))}
         </ul>
+        <button
+          type="button"
+          onClick={() => {
+            signOut(auth).then(() => router.push("/login"));
+          }}
+          className="mt-auto pt-6 text-left text-sm text-zinc-500 transition hover:text-white"
+        >
+          로그아웃
+        </button>
       </aside>
 
       <section className="flex flex-1 flex-col gap-6 p-8">

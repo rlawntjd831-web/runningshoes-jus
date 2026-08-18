@@ -54,7 +54,7 @@ export default function QuizApp() {
           href="/login"
           className="rounded-full bg-lime-400 px-8 py-4 text-center text-base font-bold text-zinc-950 transition hover:bg-lime-300"
         >
-          더 정확한 신발 추천이 궁금하다면?
+          로그인하고 더 정확한 추천 받기
         </Link>
       }
     />
