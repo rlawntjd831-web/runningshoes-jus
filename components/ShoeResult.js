@@ -1,6 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+
+function ShoeImage({ src, alt, className }) {
+  if (!src) return null;
+
+  return (
+    <div className={`relative w-full ${className}`}>
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        unoptimized
+        sizes="(max-width: 768px) 40vw, 220px"
+        className="object-contain"
+      />
+    </div>
+  );
+}
 
 export default function ShoeResult({
   eyebrow,
@@ -28,6 +46,7 @@ export default function ShoeResult({
         {shoes.map((shoe) => {
           const content = (
             <>
+              <ShoeImage src={shoe.image} alt={shoe.name} className="mb-4 h-28" />
               <p className="text-lg font-semibold text-white">{shoe.name}</p>
               {shoe.keywords?.length ? (
                 <ul className="mt-3 flex flex-col items-center gap-3">
@@ -50,12 +69,12 @@ export default function ShoeResult({
                 <button
                   type="button"
                   onClick={() => setSelectedShoe(shoe)}
-                  className="flex min-h-36 w-full flex-col items-center justify-center rounded-2xl border border-lime-400 bg-white/5 px-3 py-5 text-center transition hover:bg-white/10"
+                  className="flex min-h-36 w-full flex-col items-center rounded-2xl border border-lime-400 bg-white/5 px-3 py-5 text-center transition hover:bg-white/10"
                 >
                   {content}
                 </button>
               ) : (
-                <div className="flex min-h-36 flex-col items-center justify-center rounded-2xl border border-lime-400 bg-white/5 px-3 py-5 text-center">
+                <div className="flex min-h-36 flex-col items-center rounded-2xl border border-lime-400 bg-white/5 px-3 py-5 text-center">
                   {content}
                 </div>
               )}
@@ -76,6 +95,11 @@ export default function ShoeResult({
             >
               ×
             </button>
+            <ShoeImage
+              src={selectedShoe.image}
+              alt={selectedShoe.name}
+              className="mx-auto mb-4 h-40"
+            />
             <h2 className="pr-10 text-2xl font-extrabold text-white">
               {selectedShoe.name}
             </h2>

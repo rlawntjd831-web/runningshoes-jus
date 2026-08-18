@@ -3,16 +3,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { loadProfile } from "@/lib/profile";
+import { loadProfile, saveWeatherLog } from "@/lib/profile";
 import { pickClosetShoe } from "@/lib/today";
-import { formatShoeMileage, getDayRecord, getShoeMileageMap, TRAINING_MONTH } from "@/lib/training";
+import { dateKey, formatShoeMileage, getDayRecord, getShoeMileageMap, TRAINING_MONTH } from "@/lib/training";
 import { getMotivation } from "@/lib/motivation";
+import { WEATHER_LOCATION, compareYmd, getKstParts } from "@/lib/weather";
 import MonthTraining from "@/components/MonthTraining";
 
 export default function HomeDashboard() {
   const router = useRouter();
   const [profile, setProfile] = useState(undefined);
   const [openSurvey, setOpenSurvey] = useState(null);
+  const [liveWeather, setLiveWeather] = useState(null);
   const [selected, setSelected] = useState({
     year: TRAINING_MONTH.year,
     month: TRAINING_MONTH.month,
@@ -27,6 +29,52 @@ export default function HomeDashboard() {
     }
     setProfile(saved);
   }, [router]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const key = dateKey(selected.year, selected.month, selected.day);
+    const today = getKstParts();
+    const diff = compareYmd(selected, today);
+    const savedLog = loadProfile()?.weatherLogs?.[key];
+
+    if (diff < 0) {
+      setLiveWeather(
+        savedLog
+          ? { ok: true, source: "기록", ...savedLog }
+          : { ok: false, code: "past" },
+      );
+      return undefined;
+    }
+
+    setLiveWeather({ status: "loading" });
+
+    fetch(
+      `/api/weather?year=${selected.year}&month=${selected.month}&day=${selected.day}`,
+      { signal: controller.signal },
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setLiveWeather(data);
+        if (data?.ok && diff === 0) {
+          saveWeatherLog(key, {
+            label: data.label,
+            note: data.note,
+            pty: data.pty,
+            sky: data.sky,
+            temp: data.temp,
+            rainy: data.rainy,
+            location: data.location,
+          });
+        }
+      })
+      .catch((error) => {
+        if (error.name !== "AbortError") {
+          setLiveWeather({ ok: false, code: "error" });
+        }
+      });
+
+    return () => controller.abort();
+  }, [selected.year, selected.month, selected.day]);
 
   if (!profile) {
     return (
@@ -45,7 +93,9 @@ export default function HomeDashboard() {
     profile.actualLogs,
   );
   const motivation = getMotivation(selected.year, selected.month, selected.day);
-  const recommended = pickClosetShoe(closet, dayRecord.kind);
+  const recommended = pickClosetShoe(closet, dayRecord.kind, {
+    rainy: Boolean(liveWeather?.rainy),
+  });
   const shoeMileage = getShoeMileageMap(closet, profile.actualLogs);
   const isToday =
     selected.year === TRAINING_MONTH.year &&
@@ -54,6 +104,28 @@ export default function HomeDashboard() {
   const weatherTitle = isToday
     ? "오늘의 날씨"
     : `${selected.month}월 ${selected.day}일 날씨`;
+  const weatherLabel = liveWeather?.ok
+    ? liveWeather.label
+    : liveWeather?.status === "loading"
+      ? "불러오는 중..."
+      : liveWeather?.code === "past"
+        ? "기록 없음"
+        : liveWeather?.code === "range"
+          ? "예보 없음"
+          : liveWeather?.code === "error"
+            ? "불러오지 못함"
+            : dayRecord.weatherLabel;
+  const weatherNote = liveWeather?.ok
+    ? liveWeather.note
+    : liveWeather?.status === "loading"
+      ? "기상청 단기예보를 불러오는 중입니다."
+      : liveWeather?.code === "past"
+        ? "그날 저장해 둔 날씨 기록이 없습니다."
+        : liveWeather?.code === "range"
+          ? "아직 예보가 발표되지 않은 날짜입니다."
+          : liveWeather?.code === "error"
+            ? "기상청에서 날씨를 가져오지 못했습니다."
+            : dayRecord.weatherNote;
   const trainingTitle = isToday
     ? "오늘의 훈련"
     : `${selected.month}월 ${selected.day}일 훈련`;
@@ -100,8 +172,16 @@ export default function HomeDashboard() {
           <div className="flex w-96 shrink-0 flex-col gap-4">
             <article className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <p className="text-sm text-zinc-400">{weatherTitle}</p>
-              <p className="mt-2 text-2xl font-bold text-white">{dayRecord.weatherLabel}</p>
-              <p className="mt-2 text-sm text-zinc-400">{dayRecord.weatherNote}</p>
+              <p className="mt-1 text-xs text-zinc-500">
+                {WEATHER_LOCATION.name} ·{" "}
+                {liveWeather?.source === "기록"
+                  ? "저장된 실황"
+                  : liveWeather?.source === "단기예보"
+                    ? "단기예보"
+                    : "기상청"}
+              </p>
+              <p className="mt-2 text-2xl font-bold text-white">{weatherLabel}</p>
+              <p className="mt-2 text-sm text-zinc-400">{weatherNote}</p>
             </article>
             <article className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <div className="flex items-start justify-between gap-3">

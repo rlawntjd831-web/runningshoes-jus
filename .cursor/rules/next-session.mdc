@@ -1,0 +1,13 @@
+---
+description: Next session work order for 김주성
+alwaysApply: true
+---
+
+# Next session (do in this order)
+
+At the start of the next chat, remind 김주성 of this list first. Do not start these until asked.
+After remaining items are done, delete this rule file so the reminder turns off.
+
+1. **Vercel 배포** — GitHub `rlawntjd831-web/runningshoes-jus` is on `main`. After deploy: add the Vercel domain to Firebase Auth authorized domains, and set `NEXT_PUBLIC_FIREBASE_*` plus `KMA_SERVICE_KEY` in Vercel env. Never commit `.env.local`.
+
+Already done: shoe images, Firebase Google login (`runningshoes-jus`), KMA weather for Seoul Gangnam (today + next few days).

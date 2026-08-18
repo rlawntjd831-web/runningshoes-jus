@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { getSimpleQuizQuestions, getSimpleQuizTotal, recommendShoes, recommendShoeType } from "@/lib/quiz";
+import { getSimpleQuizQuestions, getSimpleQuizTotal, recommendShoes } from "@/lib/quiz";
 import QuestionFlow from "@/components/QuestionFlow";
 import ShoeResult from "@/components/ShoeResult";
 
@@ -47,7 +47,7 @@ export default function QuizApp() {
   return (
     <ShoeResult
       eyebrow="추천 결과"
-      title={`당신에게는 ${recommendShoeType(answers)}가 어울려요!`}
+      title="당신에게는 안정화가 어울려요!"
       shoes={recommendShoes(answers)}
       action={
         <Link

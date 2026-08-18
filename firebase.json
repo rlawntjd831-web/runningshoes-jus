@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "providers": {
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "runningshoes-jus",
+        "supportEmail": "rlawntjd831@gmail.com"
+      }
+    }
+  }
+}
