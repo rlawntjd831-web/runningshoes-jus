@@ -33,25 +33,25 @@ export default function MonthTraining({ selected, onSelect, actualLogs }) {
   }
 
   return (
-    <article className="flex min-h-0 flex-1 flex-col rounded-2xl border border-white/10 bg-white/5 p-5">
+    <article className="flex min-h-0 flex-1 flex-col rounded-2xl border border-zinc-200 bg-zinc-100 p-5">
       <p className="text-sm text-zinc-400">이달의 훈련</p>
       <div className="mt-2 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => goMonth(-1)}
-            className="flex h-8 w-8 items-center justify-center rounded-full text-xl text-zinc-400 transition hover:bg-white/10 hover:text-white"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-xl text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-950"
             aria-label="이전 달"
           >
             ‹
           </button>
-          <h3 className="min-w-36 text-center text-2xl font-extrabold text-white">
+          <h3 className="min-w-36 text-center text-2xl font-extrabold text-zinc-950">
             {view.year}년 {view.month}월
           </h3>
           <button
             type="button"
             onClick={() => goMonth(1)}
-            className="flex h-8 w-8 items-center justify-center rounded-full text-xl text-zinc-400 transition hover:bg-white/10 hover:text-white"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-xl text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-950"
             aria-label="다음 달"
           >
             ›
@@ -63,7 +63,7 @@ export default function MonthTraining({ selected, onSelect, actualLogs }) {
               {TRAINING_MONTH.raceName} {dDayLabel}
             </p>
           ) : null}
-          <p className="text-2xl font-extrabold text-white">이번달 {mileage}km</p>
+          <p className="text-2xl font-extrabold text-zinc-950">이번달 {mileage}km</p>
         </div>
       </div>
       <div className="mt-4 grid grid-cols-7 gap-1 text-center text-xs font-medium text-zinc-500">
@@ -113,7 +113,7 @@ export default function MonthTraining({ selected, onSelect, actualLogs }) {
                       ? "text-zinc-600"
                       : done
                         ? "bg-lime-400/15 text-lime-300"
-                        : "bg-white/5 text-zinc-400"
+                        : "bg-zinc-100 text-zinc-400"
               } ${isSelected && !isRace && !planned ? "ring-1 ring-lime-400" : ""}`}
             >
               <span className="text-xs font-semibold">{day}</span>

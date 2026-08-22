@@ -24,13 +24,15 @@ export default function HomeDashboard() {
   });
 
   useEffect(() => {
-    const saved = loadProfile();
-    if (!saved) {
-      router.replace("/");
-      return;
-    }
-    setProfile(saved);
-  }, [router]);
+    setProfile(
+      loadProfile() ?? {
+        surveys: [],
+        closet: [],
+        actualLogs: {},
+        weatherLogs: {},
+      },
+    );
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -134,15 +136,21 @@ export default function HomeDashboard() {
 
   return (
     <main className="flex min-h-full flex-1">
-      <aside className="flex w-60 shrink-0 flex-col border-r border-white/10 bg-zinc-900 px-3 py-6">
+      <aside className="flex w-60 shrink-0 flex-col border-r border-zinc-200 bg-zinc-100 px-3 py-6">
         <p className="text-base font-medium text-lime-400">내 설문 결과</p>
+        <Link
+          href="/detail"
+          className="mt-4 text-sm font-medium text-zinc-950 transition hover:text-lime-400"
+        >
+          심화 설문
+        </Link>
         <ul className="mt-4 space-y-2">
           {surveys.map((item) => (
             <li key={item.date}>
               <button
                 type="button"
                 onClick={() => setOpenSurvey(item)}
-                className="w-full rounded-lg px-3 py-2 text-left font-mono text-xl font-semibold text-white transition hover:bg-white/10"
+                className="w-full rounded-lg px-3 py-2 text-left font-mono text-xl font-semibold text-zinc-950 transition hover:bg-zinc-100"
               >
                 {item.date}
               </button>
@@ -152,18 +160,26 @@ export default function HomeDashboard() {
         <button
           type="button"
           onClick={() => {
-            signOut(auth).then(() => router.push("/login"));
+            signOut(auth).then(() => router.push("/home"));
           }}
-          className="mt-auto pt-6 text-left text-sm text-zinc-500 transition hover:text-white"
+          className="mt-auto pt-6 text-left text-sm text-zinc-500 transition hover:text-zinc-950"
         >
           로그아웃
         </button>
       </aside>
 
       <section className="flex flex-1 flex-col gap-6 p-8">
-        <div>
-          <p className="text-sm font-medium text-zinc-400">홈</p>
-          <h2 className="mt-1 text-3xl font-extrabold text-white">오늘도 가볍게 한 바퀴</h2>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-medium text-zinc-400">마이페이지</p>
+            <h2 className="mt-1 text-3xl font-extrabold text-zinc-950">오늘도 가볍게 한 바퀴</h2>
+          </div>
+          <Link
+            href="/"
+            className="rounded-full border border-zinc-300 px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-lime-400 hover:text-lime-400"
+          >
+            홈
+          </Link>
         </div>
 
         <article className="rounded-2xl border border-lime-400 bg-lime-400 p-5">
@@ -181,7 +197,7 @@ export default function HomeDashboard() {
           />
 
           <div className="flex w-96 shrink-0 flex-col gap-4">
-            <article className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <article className="rounded-2xl border border-zinc-200 bg-zinc-100 p-5">
               <p className="text-sm text-zinc-400">{weatherTitle}</p>
               <p className="mt-1 text-xs text-zinc-500">
                 {WEATHER_LOCATION.name} ·{" "}
@@ -191,10 +207,10 @@ export default function HomeDashboard() {
                     ? "단기예보"
                     : "기상청"}
               </p>
-              <p className="mt-2 text-2xl font-bold text-white">{weatherLabel}</p>
+              <p className="mt-2 text-2xl font-bold text-zinc-950">{weatherLabel}</p>
               <p className="mt-2 text-sm text-zinc-400">{weatherNote}</p>
             </article>
-            <article className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <article className="rounded-2xl border border-zinc-200 bg-zinc-100 p-5">
               <div className="flex items-start justify-between gap-3">
                 <p className="text-sm text-zinc-400">{trainingTitle}</p>
                 <Link
@@ -212,13 +228,13 @@ export default function HomeDashboard() {
                     ? "실제 기록"
                     : "추천 훈련"}
               </p>
-              <p className="mt-2 text-2xl font-bold text-white">{dayRecord.trainingType}</p>
+              <p className="mt-2 text-2xl font-bold text-zinc-950">{dayRecord.trainingType}</p>
               {dayRecord.trainingDistance ? (
-                <p className="text-2xl font-bold text-white">{dayRecord.trainingDistance}</p>
+                <p className="text-2xl font-bold text-zinc-950">{dayRecord.trainingDistance}</p>
               ) : null}
               <p className="mt-2 text-sm text-zinc-400">{dayRecord.trainingNote}</p>
             </article>
-            <article className="relative flex-1 rounded-2xl border border-white/10 bg-white/5 p-5">
+            <article className="relative flex-1 rounded-2xl border border-zinc-200 bg-zinc-100 p-5">
               <div className="flex items-start justify-between gap-3">
                 <p className="text-sm text-zinc-400">내 신발장</p>
                 <Link
@@ -237,7 +253,7 @@ export default function HomeDashboard() {
                       className={`flex min-h-24 flex-col rounded-xl px-3 pt-5 pb-1.5 text-center text-sm font-semibold ${
                         recommended?.id === shoe.id
                           ? "border border-lime-400 bg-lime-400/10 text-lime-300"
-                          : "border border-white/10 text-white"
+                          : "border border-zinc-200 text-zinc-950"
                       }`}
                     >
                       <p>{shoe.name}</p>
@@ -263,16 +279,16 @@ export default function HomeDashboard() {
 
       {openSurvey ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-          <div className="relative w-full max-w-lg rounded-3xl border border-white/10 bg-zinc-900 p-8">
+          <div className="relative w-full max-w-lg rounded-3xl border border-zinc-200 bg-zinc-100 p-8">
             <button
               type="button"
               onClick={() => setOpenSurvey(null)}
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-xl text-zinc-400 transition hover:bg-white/10 hover:text-white"
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-xl text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-950"
               aria-label="닫기"
             >
               ×
             </button>
-            <h2 className="pr-10 font-mono text-2xl font-extrabold text-white">
+            <h2 className="pr-10 font-mono text-2xl font-extrabold text-zinc-950">
               {openSurvey.date}
             </h2>
             {openSurvey.selectedShoe ? (
@@ -284,7 +300,7 @@ export default function HomeDashboard() {
                 {(openSurvey.shoes ?? []).map((shoe) => (
                   <li
                     key={shoe.id}
-                    className="rounded-xl border border-white/10 bg-white/5 px-2 py-4 text-center text-sm font-semibold text-white"
+                    className="rounded-xl border border-zinc-200 bg-zinc-100 px-2 py-4 text-center text-sm font-semibold text-zinc-950"
                   >
                     {shoe.name}
                   </li>
@@ -295,7 +311,7 @@ export default function HomeDashboard() {
               {openSurvey.survey.map((item) => (
                 <li key={item.question}>
                   <p className="text-xs text-zinc-500">{item.question}</p>
-                  <p className="mt-1 text-sm font-medium text-white">{item.answer}</p>
+                  <p className="mt-1 text-sm font-medium text-zinc-950">{item.answer}</p>
                 </li>
               ))}
             </ul>

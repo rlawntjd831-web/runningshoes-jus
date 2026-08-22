@@ -29,14 +29,10 @@ export default function TrainingEditor() {
 
   useEffect(() => {
     const saved = loadProfile();
-    if (!saved) {
-      router.replace("/");
-      return;
-    }
-
+    const logs = saved?.actualLogs ?? {};
     const key = dateKey(year, month, day);
-    setHasPlan(Boolean(saved.actualLogs?.[key]));
-    const record = getDayRecord(year, month, day, saved.actualLogs);
+    setHasPlan(Boolean(logs[key]));
+    const record = getDayRecord(year, month, day, logs);
     const isRest = record.trainingType === "휴식일" || record.kind === "rest";
     setRest(isRest && record.trainingType !== "예정 없음");
     if (record.trainingType && record.trainingType !== "휴식일" && record.trainingType !== "예정 없음") {
@@ -50,11 +46,11 @@ export default function TrainingEditor() {
       setKm(String(record.trainingDistance.replace("km", "")));
     }
     setReady(true);
-  }, [router, year, month, day]);
+  }, [year, month, day]);
 
   function removePlan() {
     saveActualTraining(dateKey(year, month, day), null);
-    router.push("/home");
+    router.push("/mypage");
   }
 
   function save(event) {
@@ -72,7 +68,7 @@ export default function TrainingEditor() {
       });
     }
 
-    router.push("/home");
+    router.push("/mypage");
   }
 
   if (!ready) {
@@ -86,7 +82,7 @@ export default function TrainingEditor() {
   return (
     <main className="mx-auto flex min-h-full w-full max-w-xl flex-1 flex-col px-6 py-12">
       <p className="text-sm font-medium text-lime-400">훈련 기록</p>
-      <h1 className="mt-2 text-3xl font-extrabold text-white">
+      <h1 className="mt-2 text-3xl font-extrabold text-zinc-950">
         {year}년 {month}월 {day}일
       </h1>
       <p className="mt-2 text-sm text-zinc-400">
@@ -96,7 +92,7 @@ export default function TrainingEditor() {
       </p>
 
       <form onSubmit={save} className="mt-8 flex flex-col gap-4">
-        <label className="flex items-center gap-3 text-white">
+        <label className="flex items-center gap-3 text-zinc-950">
           <input
             type="checkbox"
             checked={rest}
@@ -111,7 +107,7 @@ export default function TrainingEditor() {
             <select
               value={type}
               onChange={(event) => setType(event.target.value)}
-              className="rounded-2xl border border-white/10 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-lime-400"
+              className="rounded-2xl border border-zinc-200 bg-zinc-100 px-4 py-3 text-zinc-950 outline-none focus:border-lime-400"
             >
               {TRAINING_TYPES.map((item) => (
                 <option key={item} value={item}>
@@ -126,7 +122,7 @@ export default function TrainingEditor() {
               value={km}
               onChange={(event) => setKm(event.target.value)}
               placeholder="거리(km)"
-              className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-zinc-500 focus:border-lime-400"
+              className="rounded-2xl border border-zinc-200 bg-zinc-100 px-4 py-3 text-zinc-950 outline-none placeholder:text-zinc-500 focus:border-lime-400"
             />
           </>
         )}
@@ -143,17 +139,17 @@ export default function TrainingEditor() {
         <button
           type="button"
           onClick={removePlan}
-          className="mt-4 self-start text-sm text-zinc-400 transition hover:text-white"
+          className="mt-4 self-start text-sm text-zinc-400 transition hover:text-zinc-950"
         >
           계획 삭제
         </button>
       ) : null}
 
       <Link
-        href="/home"
-        className="mt-8 self-start text-sm text-zinc-400 transition hover:text-white"
+        href="/mypage"
+        className="mt-8 self-start text-sm text-zinc-400 transition hover:text-zinc-950"
       >
-        홈으로
+        마이페이지로
       </Link>
     </main>
   );

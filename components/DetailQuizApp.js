@@ -23,7 +23,7 @@ export default function DetailQuizApp() {
       shoes,
       selectedShoe,
     });
-    router.push("/home");
+    router.push("/mypage");
   }
 
   if (!answers) {
@@ -52,7 +52,7 @@ export default function DetailQuizApp() {
           onClick={() => goHome()}
           className="rounded-full bg-lime-400 px-8 py-4 text-base font-bold text-zinc-950 transition hover:bg-lime-300"
         >
-          홈으로
+          마이페이지로
         </button>
       }
     />

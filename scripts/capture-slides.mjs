@@ -33,7 +33,7 @@ await page.getByRole("button", { name: "나에게 맞는 러닝화 찾으러 가
 await shot(page, "00-landing.png");
 
 await page.getByRole("button", { name: "나에게 맞는 러닝화 찾으러 가기!" }).click();
-await page.getByRole("heading", { name: "러닝을 해보신 적이 있으신가요?" }).waitFor();
+await page.getByRole("heading", { name: "러닝을 해보신 적이 있으신가요? (최근 6개월 이내)" }).waitFor();
 await shot(page, "01-simple-quiz.png");
 
 await clickLabel(page, "아니오");
@@ -62,7 +62,7 @@ await clickLabel(page, "다음");
 await clickLabel(page, "보통");
 await clickLabel(page, "없음");
 await clickLabel(page, "다음");
-await clickLabel(page, "데일리");
+await clickLabel(page, "매일 가볍게 신을 수 있는 러닝화");
 await clickLabel(page, "상관 없음");
 await clickLabel(page, "다음");
 await clickLabel(page, "상관 없음");
@@ -84,7 +84,7 @@ await page.evaluate(() => {
     }),
   );
 });
-await page.goto(`${BASE}/home`, { waitUntil: "networkidle" });
+await page.goto(`${BASE}/mypage`, { waitUntil: "networkidle" });
 await page.getByText("오늘도 가볍게 한 바퀴").waitFor();
 await page.setViewportSize({ width: 1440, height: 1100 });
 await page.waitForTimeout(1200);

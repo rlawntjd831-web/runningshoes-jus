@@ -83,14 +83,17 @@ export default function QuestionFlow({
       <p className="text-sm font-medium text-zinc-400">
         {question.stepLabel ?? `${questionIndex + 1} / ${total}`}
       </p>
-      <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/10">
+      <div className="mt-3 h-1 overflow-hidden rounded-full bg-zinc-200">
         <div
           className="h-full rounded-full bg-lime-400 transition-all"
           style={{ width: `${progress}%` }}
         />
       </div>
-      <h1 className="mt-8 text-2xl font-bold leading-snug text-white sm:text-3xl">
+      <h1 className="mt-8 text-2xl font-bold leading-snug text-zinc-950 sm:text-3xl">
         {question.text}
+        {question.hint ? (
+          <span className="text-xl font-bold sm:text-2xl"> {question.hint}</span>
+        ) : null}
       </h1>
       <div className="mt-8 flex flex-col gap-3">
         {question.options.map((option) => {
@@ -103,8 +106,8 @@ export default function QuestionFlow({
               onClick={() => selectOption(option.id)}
               className={`rounded-2xl border px-5 py-4 text-left text-lg font-medium transition ${
                 selected
-                  ? "border-lime-400 bg-lime-400/10 text-white"
-                  : "border-white/10 bg-white/5 text-white hover:border-lime-400 hover:bg-white/10"
+                  ? "border-lime-400 bg-lime-400/10 text-zinc-950"
+                  : "border-zinc-200 bg-zinc-100 text-zinc-950 hover:border-lime-400 hover:bg-zinc-50"
               }`}
             >
               {option.label}
@@ -125,7 +128,7 @@ export default function QuestionFlow({
       <button
         type="button"
         onClick={goBack}
-        className="mt-8 self-start text-sm text-zinc-400 transition hover:text-white"
+        className="mt-8 self-start text-sm text-zinc-400 transition hover:text-zinc-950"
       >
         이전
       </button>

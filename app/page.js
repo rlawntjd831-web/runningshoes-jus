@@ -1,5 +1,5 @@
-import QuizApp from "@/components/QuizApp";
+import PublicHome from "@/components/PublicHome";
 
 export default function Home() {
-  return <QuizApp />;
+  return <PublicHome />;
 }
